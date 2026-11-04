@@ -1,3 +1,78 @@
 <html>
   <body><h1>Wasmer Static Site</h1></body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load HTML From GitHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #238636;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        #display-box {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>GitHub HTML Loader</h1>
+    <p>Click the button below to fetch and render an HTML file directly from GitHub.</p>
+    
+    <!-- 1. The trigger button -->
+    <button id="load-btn">Load GitHub File</button>
+
+    <!-- 2. The empty placeholder box where the HTML will appear -->
+    <div id="display-box">
+        <em>Content will load here...</em>
+    </div>
+
+    <script>
+        // 3. Attach a click event listener to our button
+        document.getElementById('load-btn').addEventListener('click', () => {
+            
+            // Put your actual Raw GitHub URL here inside the quotes
+            const githubRawUrl = 'https://raw.githubusercontent.com/28schafers/TheWebsite/refs/heads/main/bloons-TD-5.html?token=GHSAT0AAAAAAEO7HKV6FZ4CR57LGFQYMNPQ2XLINZA';
+            
+            const displayBox = document.getElementById('display-box');
+            displayBox.innerHTML = "Loading..."; // Provide feedback to the user
+
+            // 4. Fetch the data across the internet
+            fetch(githubRawUrl)
+                .then(response => {
+                    // Check if the URL actually exists and is accessible
+                    if (!response.ok) {
+                        throw new Error(`Could not fetch file. Status: ${response.status}`);
+                    }
+                    return response.text(); // Convert the network stream into readable text
+                })
+                .then(htmlString => {
+                    // 5. Inject the string of HTML directly into the box
+                    displayBox.innerHTML = htmlString;
+                })
+                .catch(error => {
+                    // Handle errors (like typos in the URL or offline status)
+                    displayBox.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
+                    console.error("Fetch error:", error);
+                });
+        });
+    </script>
+
+</body>
 </html>
